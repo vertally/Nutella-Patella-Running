@@ -63,6 +63,8 @@ create table app_user_role (
 			foreign key (workout_type_id)
             references workout_type(workout_type_id),
 		`date` date not null,
+		distance int not null,
+        unit varchar(50) not null,
         `description` varchar(240),
         effort varchar(240),
         training_plan_id int not null,
