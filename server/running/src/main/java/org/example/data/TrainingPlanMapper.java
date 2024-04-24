@@ -13,10 +13,10 @@ public class TrainingPlanMapper implements RowMapper<TrainingPlan> {
         TrainingPlan trainingPlan = new TrainingPlan();
         trainingPlan.setTrainingPlanId(rs.getInt("training_plan_id"));
         trainingPlan.setAppUserId(rs.getInt("app_user_id"));
-        trainingPlan.setName(rs.getString("`name`"));
+        trainingPlan.setName(rs.getString("name"));
         trainingPlan.setStartDate(rs.getDate("start_date").toLocalDate());
         trainingPlan.setEndDate(rs.getDate("end_date").toLocalDate());
-        trainingPlan.setDescription(rs.getString("`description`"));
+        trainingPlan.setDescription(rs.getString("description"));
 
         return trainingPlan;
     }

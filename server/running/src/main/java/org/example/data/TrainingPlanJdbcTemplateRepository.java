@@ -23,7 +23,7 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
     @Override
     @Transactional
     public TrainingPlan findTrainingPlanByTrainingPlanId(int trainingPlanId) throws DataAccessException {
-        final String sql = "select training_plan_id, app_user_id, `name`, start_date, end_date, `description` " +
+        final String sql = "select training_plan_id, app_user_id, name, start_date, end_date, description " +
                 "from training_plan " +
                 "where training_plan_id = ?;";
 
@@ -36,7 +36,7 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
     @Override
     @Transactional
     public List<TrainingPlan> findTrainingPlanByAppUserId(int appUserId) throws DataAccessException {
-        final String sql = "select training_plan_id, app_user_id, `name`, start_date, end_date, `description` " +
+        final String sql = "select training_plan_id, app_user_id, name, start_date, end_date, description " +
                 "from training_plan " +
                 "where app_user_id = ?;";
 
@@ -46,7 +46,7 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
     @Override
     @Transactional
     public TrainingPlan addTrainingPlan(TrainingPlan trainingPlan) throws DataAccessException {
-        final String sql = "insert into training_plan (app_user_id, `name`, start_date, end_date, `description` " +
+        final String sql = "insert into training_plan (app_user_id, name, start_date, end_date, description) " +
                 "values (?, ?, ?, ?, ?);";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -90,12 +90,24 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
 
     @Override
     @Transactional
-    public boolean deleteTrainingPlan(int trainingPlanId) {
+    public boolean deleteTrainingPlan(int trainingPlanId) throws DataAccessException {
+        deleteChildren(trainingPlanId);
+
         final String sql = "delete from training_plan " +
                 "where training_plan_id = ?;";
 
         int rowsDeleted = jdbcTemplate.update(sql, trainingPlanId);
 
         return rowsDeleted > 0;
+    }
+
+    private void deleteChildren(int trainingPlanId) {
+        final String sql = "delete comment from comment " +
+                "join workout on workout.workout_id = comment.workout_id " +
+                "join training_plan on training_plan.training_plan_id = workout.training_plan_id " +
+                "where training_plan.training_plan_id = ?;";
+
+        jdbcTemplate.update(sql, trainingPlanId);
+        jdbcTemplate.update("delete from workout where training_plan_id = ?;", trainingPlanId);
     }
 }
