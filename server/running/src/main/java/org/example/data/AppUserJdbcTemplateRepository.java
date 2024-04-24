@@ -105,19 +105,14 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
     }
 
     private void deleteChildren(int appUserId) {
-        final String aurSQL = "delete from app_user_role where app_user_id = ?;";
-        jdbcTemplate.update(aurSQL, appUserId);
+        jdbcTemplate.update("delete from app_user_role where app_user_id = ?;", appUserId);
 
-        final String tpSQL = "delete from training_plan where app_user_id = ?;";
-        jdbcTemplate.update(tpSQL, appUserId);
+        jdbcTemplate.update("delete from training_plan where app_user_id = ?;", appUserId);
 
-        final String wSQL = "delete from workout where app_user_id = ?;";
-        jdbcTemplate.update(wSQL, appUserId);
+        jdbcTemplate.update("delete from workout where app_user_id = ?;", appUserId);
 
-        final String cSQL = "delete from `comment` where app_user_id = ?;";
-        jdbcTemplate.update(cSQL, appUserId);
+        jdbcTemplate.update("delete from `comment` where app_user_id = ?;", appUserId);
 
-        final String pbSQL = "delete from personal_best where app_user_id = ?;";
-        jdbcTemplate.update(pbSQL, appUserId);
+        jdbcTemplate.update("delete from personal_best where app_user_id = ?;", appUserId);
     }
 }
