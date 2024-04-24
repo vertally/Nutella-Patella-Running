@@ -2,10 +2,6 @@ drop database if exists running_test;
 create database running_test;
 use running_test;
 
-drop database if exists running;
-create database running;
-use running;
-
 create table app_user (
 	app_user_id int primary key auto_increment,
     email varchar(50) not null unique,
@@ -20,10 +16,11 @@ create table app_role (
 );
 
 create table app_user_role (
+	app_user_role_id int primary key auto_increment,
 	app_user_id int not null,
     app_role_id int not null,
-    constraint pk_app_user_role
-		primary key (app_user_id, app_role_id),
+--     constraint pk_app_user_role
+-- 		primary key (app_user_id, app_role_id),
 	constraint fk_app_user_role_user_id
 		foreign key (app_user_id)
         references app_user(app_user_id),
