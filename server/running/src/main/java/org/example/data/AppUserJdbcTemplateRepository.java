@@ -24,7 +24,7 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
 
     @Override
     @Transactional
-    public AppUser findAppUserByUsername(String username) {
+    public AppUser findAppUserByUsername(String username) throws DataAccessException {
         List<String> roles = getRolesByUsername(username);
 
         final String sql = "select app_user_id, email, username, password_hash, enabled " +
@@ -39,7 +39,7 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
 
     @Override
     @Transactional
-    public AppUser addAppUser(AppUser user) {
+    public AppUser addAppUser(AppUser user) throws DataAccessException {
         final String sql = "insert into app_user (email, username, password_hash) " +
                 "values (?, ?, ?);";
 
