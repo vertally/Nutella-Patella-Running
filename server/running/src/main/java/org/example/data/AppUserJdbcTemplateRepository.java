@@ -1,6 +1,7 @@
 package org.example.data;
 
 import org.example.models.AppUser;
+import org.example.models.AppUserRole;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -65,6 +66,8 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
     @Override
     @Transactional
     public boolean deleteAppUser(int appUserId) throws DataAccessException {
+        deleteChildren(appUserId);
+
         final String sql = "delete from app_user " +
                 "where app_user_id = ?;";
 
@@ -74,13 +77,13 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
     }
 
     private List<String> getRolesByUsername(String username) {
-        final String sql = "ar.`name` " +
+        final String sql = "select ar.name " +
                 "from app_user_role aur " +
                 "inner join app_role ar on aur.app_role_id = ar.app_role_id " +
                 "inner join app_user au on aur.app_user_id = au.app_user_id " +
                 "where au.username = ?;";
 
-        return jdbcTemplate.query(sql, (rs, rowId) -> rs.getString("`name`"), username);
+        return jdbcTemplate.query(sql, (rs, rowId) -> rs.getString("name"), username);
     }
 
     private void updateRoles(AppUser user) {
@@ -99,5 +102,22 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
 
             jdbcTemplate.update(sql, user.getAppUserId(), role.getAuthority());
         }
+    }
+
+    private void deleteChildren(int appUserId) {
+        final String aurSQL = "delete from app_user_role where app_user_id = ?;";
+        jdbcTemplate.update(aurSQL, appUserId);
+
+        final String tpSQL = "delete from training_plan where app_user_id = ?;";
+        jdbcTemplate.update(tpSQL, appUserId);
+
+        final String wSQL = "delete from workout where app_user_id = ?;";
+        jdbcTemplate.update(wSQL, appUserId);
+
+        final String cSQL = "delete from `comment` where app_user_id = ?;";
+        jdbcTemplate.update(cSQL, appUserId);
+
+        final String pbSQL = "delete from personal_best where app_user_id = ?;";
+        jdbcTemplate.update(pbSQL, appUserId);
     }
 }
