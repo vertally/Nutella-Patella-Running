@@ -9,18 +9,22 @@ public class Workout {
     private int trainingPlanId;
     private int workoutTypeId;
     private LocalDate date;
+    private int distance;
+    private String unit;
     private String description;
     private String effort;
 
     public Workout() {
     }
 
-    public Workout(int workoutId, int appUserId, int trainingPlanId, int workoutTypeId, LocalDate date, String description, String effort) {
+    public Workout(int workoutId, int appUserId, int trainingPlanId, int workoutTypeId, LocalDate date, int distance, String unit, String description, String effort) {
         this.workoutId = workoutId;
         this.appUserId = appUserId;
         this.trainingPlanId = trainingPlanId;
         this.workoutTypeId = workoutTypeId;
         this.date = date;
+        this.distance = distance;
+        this.unit = unit;
         this.description = description;
         this.effort = effort;
     }
@@ -63,6 +67,22 @@ public class Workout {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public String getDescription() {
