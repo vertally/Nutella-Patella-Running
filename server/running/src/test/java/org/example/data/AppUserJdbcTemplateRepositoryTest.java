@@ -58,24 +58,24 @@ class AppUserJdbcTemplateRepositoryTest {
                 List.of("runner")
         );
 
-        AppUser result = repository.addAppUser(user);
+        AppUser expected = repository.addAppUser(user);
 
-        assertNotNull(result);
-        assertEquals(3, result.getAppUserId());
-        assertEquals("NutellaElbow", result.getUsername());
+        assertNotNull(expected);
+        assertEquals(3, expected.getAppUserId());
+        assertEquals("NutellaElbow", expected.getUsername());
     }
 
     @Test
     void shouldDeleteAppUser() throws DataAccessException{
-        boolean result = repository.deleteAppUser(2);
+        boolean expected = repository.deleteAppUser(2);
 
-        assertTrue(result);
+        assertTrue(expected);
     }
 
     @Test
     void shouldNotDeleteWhenAppUserDoesNotExist() throws DataAccessException {
-        boolean result = repository.deleteAppUser(3);
+        boolean expected = repository.deleteAppUser(3);
 
-        assertFalse(result);
+        assertFalse(expected);
     }
 }
