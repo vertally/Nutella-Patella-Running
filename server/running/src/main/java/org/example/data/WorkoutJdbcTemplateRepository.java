@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public class WorkoutJdbcTemplateRepository {
+public class WorkoutJdbcTemplateRepository implements WorkoutRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,6 +21,7 @@ public class WorkoutJdbcTemplateRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     @Transactional
     public Workout findWorkoutByWorkoutId(int workoutId) throws DataAccessException {
         final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
@@ -33,6 +34,7 @@ public class WorkoutJdbcTemplateRepository {
                 .orElse(null);
     }
 
+    @Override
     @Transactional
     public List<Workout> findWorkoutByTrainingPlanId(int trainingPlanId) throws DataAccessException {
         final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
@@ -43,17 +45,19 @@ public class WorkoutJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new WorkoutMapper(), trainingPlanId);
     }
 
+    @Override
     @Transactional
     public List<Workout> findWorkoutByTrainingPlanName(String trainingPlanName) throws DataAccessException {
-        final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
-                "from workout " +
-                "inner join training_plan on training_plan.training_plan_id = workout.training_plan_id " +
-                "where training_plan.training_plan_name = ? " +
+        final String sql = "select workout_id, w.app_user_id, workout_type_id, date, distance, unit, w.description, effort, w.training_plan_id " +
+                "from workout w " +
+                "inner join training_plan tp on tp.training_plan_id = w.training_plan_id " +
+                "where tp.name = ? " +
                 "order by date;";
 
         return jdbcTemplate.query(sql, new WorkoutMapper(), trainingPlanName);
     }
 
+    @Override
     @Transactional
     public List<Workout> findWorkoutByWorkoutTypeId(int workoutTypeId) throws DataAccessException {
         final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
@@ -64,6 +68,7 @@ public class WorkoutJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new WorkoutMapper(), workoutTypeId);
     }
 
+    @Override
     @Transactional
     public List<Workout> findWorkoutByAppUserId(int appUserId) throws DataAccessException {
         final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
@@ -74,17 +79,19 @@ public class WorkoutJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new WorkoutMapper(), appUserId);
     }
 
+    @Override
     @Transactional
     public List<Workout> findWorkoutByAppUserUsername(String appUserUsername) throws DataAccessException {
-        final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
-                "from workout " +
-                "inner join app_user on app_user.app_user_id = workout.app_user_id " +
-                "where app_user.username = ? " +
+        final String sql = "select workout_id, w.app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
+                "from workout w " +
+                "inner join app_user au on au.app_user_id = w.app_user_id " +
+                "where au.username = ? " +
                 "order by date;";
 
         return jdbcTemplate.query(sql, new WorkoutMapper(), appUserUsername);
     }
 
+    @Override
     @Transactional
     public List<Workout> findWorkoutByWorkoutDate(LocalDate workoutDate) throws DataAccessException {
         final String sql = "select workout_id, app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
@@ -95,6 +102,7 @@ public class WorkoutJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new WorkoutMapper(), workoutDate);
     }
 
+    @Override
     @Transactional
     public Workout addWorkout(Workout workout) throws DataAccessException {
         final String sql = "insert into workout (app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
@@ -124,6 +132,7 @@ public class WorkoutJdbcTemplateRepository {
         return workout;
     }
 
+    @Override
     @Transactional
     public boolean updateWorkout(Workout workout) throws DataAccessException {
         final String sql = "update workout set " +
@@ -149,10 +158,11 @@ public class WorkoutJdbcTemplateRepository {
         return rowsUpdated > 0;
     }
 
+    @Override
     @Transactional
     public boolean deleteWorkout(int workoutId) throws DataAccessException {
         deleteChildren(workoutId);
-        
+
         final String sql = "delete from workout " +
                 "where workout_id = ?;";
 
