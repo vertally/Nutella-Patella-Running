@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class WorkoutTypeJdbcTemplateRepository {
+public class WorkoutTypeJdbcTemplateRepository implements WorkoutTypeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -19,6 +19,7 @@ public class WorkoutTypeJdbcTemplateRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     @Transactional
     public List<WorkoutType> findAllWorkoutType() throws DataAccessException {
         final String sql = "select workout_type_id, name, description " +
@@ -28,6 +29,7 @@ public class WorkoutTypeJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new WorkoutTypeMapper());
     }
 
+    @Override
     @Transactional
     public WorkoutType findWorkoutTypeByWorkoutTypeId(int workoutTypeId) throws DataAccessException {
         final String sql = "select workout_type_id, name, description " +
@@ -40,6 +42,7 @@ public class WorkoutTypeJdbcTemplateRepository {
                 .orElse(null);
     }
 
+    @Override
     @Transactional
     public WorkoutType findWorkoutTypeByWorkoutTypeName(String workoutTypeName) throws DataAccessException {
         final String sql = "select workout_type_id, name, description " +
@@ -52,6 +55,7 @@ public class WorkoutTypeJdbcTemplateRepository {
                 .orElse(null);
     }
 
+    @Override
     @Transactional
     public WorkoutType addWorkoutType(WorkoutType workoutType) throws DataAccessException {
         final String sql = "insert into workout_type (name, description) " +
@@ -75,6 +79,7 @@ public class WorkoutTypeJdbcTemplateRepository {
         return workoutType;
     }
 
+    @Override
     @Transactional
     public boolean updateWorkoutType(WorkoutType workoutType) throws DataAccessException {
         final String sql = "update workout_type set " +
@@ -88,6 +93,7 @@ public class WorkoutTypeJdbcTemplateRepository {
         return rowsUpdated > 0;
     }
 
+    @Override
     @Transactional
     public boolean deleteWorkoutType(int workoutTypeId) throws DataAccessException {
         final String sql = "delete from workout_type " +
