@@ -2,7 +2,7 @@ package org.example.models;
 
 public class WorkoutType {
 
-    private int trainingPlanId;
+    private int workoutTypeId;
     private String name;
     private String description;
 
@@ -10,17 +10,17 @@ public class WorkoutType {
     }
 
     public WorkoutType(int trainingPlanId, String name, String description) {
-        this.trainingPlanId = trainingPlanId;
+        this.workoutTypeId = trainingPlanId;
         this.name = name;
         this.description = description;
     }
 
-    public int getTrainingPlanId() {
-        return trainingPlanId;
+    public int getWorkoutTypeId() {
+        return workoutTypeId;
     }
 
-    public void setTrainingPlanId(int trainingPlanId) {
-        this.trainingPlanId = trainingPlanId;
+    public void setWorkoutTypeId(int trainingPlanId) {
+        this.workoutTypeId = trainingPlanId;
     }
 
     public String getName() {
