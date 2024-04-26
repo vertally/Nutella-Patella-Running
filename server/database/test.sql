@@ -78,7 +78,7 @@ create table `comment` (
 	constraint fk_comment_user_id
 		foreign key (app_user_id)
 		references app_user(app_user_id),
-	parent_comment_id int,
+	parent_comment_id int not null,
 	`comment` varchar(1000) not null,
 	`date` date not null
 );
@@ -169,7 +169,7 @@ insert into workout (app_user_id, workout_type_id, `date`, distance, unit, `desc
     
 insert into `comment` (workout_id, app_user_id, parent_comment_id, `comment`, `date`)
 	values
-	(1, 2, null, "Great job on this one! How did you feel in the morning before the run?", "2024-07-01"),
+	(1, 2, 1, "Great job on this one! How did you feel in the morning before the run?", "2024-07-01"),
 	(1, 1, 1, "All right. A little tired in the legs, and I think it showed in my HR.", "2024-07-01");
     
 insert into distance (distance)
