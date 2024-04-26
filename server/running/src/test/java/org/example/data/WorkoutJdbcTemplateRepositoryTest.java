@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -53,6 +54,7 @@ class WorkoutJdbcTemplateRepositoryTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
+        assertEquals(3, result.get(0).getDistance());
     }
 
     @Test
@@ -68,6 +70,7 @@ class WorkoutJdbcTemplateRepositoryTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
+        assertEquals(3, result.get(0).getDistance());
     }
 
     @Test
@@ -91,6 +94,102 @@ class WorkoutJdbcTemplateRepositoryTest {
         List<Workout> result = repository.findWorkoutByWorkoutTypeId(1);
 
         assertEquals(0, result.size());
+    }
+
+    @Test
+    void shouldFindByAppUserId() throws DataAccessException {
+        List<Workout> result = repository.findWorkoutByAppUserId(1);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(3, result.get(0).getDistance());
+    }
+
+    @Test
+    void shouldNotFindByAppUserIdWhenAppUserIdDoesNotExist() throws DataAccessException {
+        List<Workout> result = repository.findWorkoutByAppUserId(2);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void shouldFindByAppUserUsername() throws DataAccessException {
+        List<Workout> result = repository.findWorkoutByAppUserUsername("NutellaPatella");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(3, result.get(0).getDistance());
+    }
+
+    @Test
+    void shouldNotFindByAppUserUsernameWhenAppUserUsernameDoesNotExist() throws DataAccessException {
+        List<Workout> result = repository.findWorkoutByAppUserUsername("CoachNutellaPatella");
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void shouldFindByWorkoutDate() throws DataAccessException {
+        List<Workout> result = repository.findWorkoutByWorkoutDate(LocalDate.of(2024, 7, 1));
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(3, result.get(0).getDistance());
+    }
+
+    @Test
+    void shouldNotFindByWorkoutDateWhenWorkoutDateDoesNotExist() throws DataAccessException {
+        List<Workout> result = repository.findWorkoutByWorkoutDate(LocalDate.of(2024, 7, 2));
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void shouldAddWorkout() throws DataAccessException {
+        Workout expected = new Workout();
+        expected.setAppUserId(1);
+        expected.setWorkoutTypeId(4);
+        expected.setDate(LocalDate.of(2024, 7, 2));
+        expected.setDistance(4);
+        expected.setUnit("miles");
+        expected.setDescription("1 mile warm-up followed by 3 miles in Zone 4 (approximately 90-100% of FTHR).");
+        expected.setEffort("Zone 4");
+        expected.setTrainingPlanId(1);
+
+        Workout actual = repository.addWorkout(expected);
+        List<Workout> allWorkouts = repository.findWorkoutByTrainingPlanId(1);
+
+        assertNotNull(actual);
+        assertEquals(3, allWorkouts.size());
+    }
+
+    @Test
+    void shouldUpdateWorkout() throws DataAccessException {
+        Workout expected = repository.findWorkoutByWorkoutId(1);
+        expected.setDescription("An easy base run to increase your weekly mileage and shake out your legs from your last race.");
+
+        boolean actual = repository.updateWorkout(expected);
+
+        assertTrue(actual);
+        assertEquals("An easy base run to increase your weekly mileage and shake out your legs from your last race.", expected.getDescription());
+        assertEquals(3, expected.getDistance());
+    }
+
+    @Test
+    void shouldDeleteWorkout() throws DataAccessException {
+        boolean expected = repository.deleteWorkout(1);
+        List<Workout> actual = repository.findWorkoutByTrainingPlanId(1);
+
+        assertTrue(expected);
+        assertEquals(1, actual.size());
+        assertEquals(12, actual.get(0).getDistance());
+    }
+
+    @Test
+    void shouldNotDeleteWorkoutWhenWorkoutDoesNotExist() throws DataAccessException {
+        boolean expected = repository.deleteWorkout(3);
+
+        assertFalse(expected);
     }
 
 }

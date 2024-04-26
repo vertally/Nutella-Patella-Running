@@ -105,7 +105,7 @@ public class WorkoutJdbcTemplateRepository implements WorkoutRepository {
     @Override
     @Transactional
     public Workout addWorkout(Workout workout) throws DataAccessException {
-        final String sql = "insert into workout (app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id " +
+        final String sql = "insert into workout (app_user_id, workout_type_id, date, distance, unit, description, effort, training_plan_id) " +
                 "values (?, ?, ?, ?, ?, ?, ?, ?);";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
