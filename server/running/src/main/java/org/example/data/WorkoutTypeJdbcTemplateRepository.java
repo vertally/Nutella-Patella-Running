@@ -84,7 +84,7 @@ public class WorkoutTypeJdbcTemplateRepository implements WorkoutTypeRepository 
     public boolean updateWorkoutType(WorkoutType workoutType) throws DataAccessException {
         final String sql = "update workout_type set " +
                 "name = ?, " +
-                "description = ? ";
+                "description = ?;";
 
         int rowsUpdated = jdbcTemplate.update(sql,
                 workoutType.getName(),
