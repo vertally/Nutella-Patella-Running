@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class CommentJdbcTemplateRepository {
+public class CommentJdbcTemplateRepository implements CommentRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,6 +20,7 @@ public class CommentJdbcTemplateRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     @Transactional
     public Comment findCommentByCommentId(int commentId) throws DataAccessException {
         final String sql = "select comment_id, workout_id, app_user_id, parent_comment_id, comment, date " +
@@ -32,6 +33,7 @@ public class CommentJdbcTemplateRepository {
                 .orElse(null);
     }
 
+    @Override
     @Transactional
     public List<Comment> findByWorkoutId(int workoutId) throws DataAccessException {
         final String sql = "select comment_id, workout_id, app_user_id, parent_comment_id, comment, date " +
@@ -42,8 +44,9 @@ public class CommentJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new CommentMapper(), workoutId);
     }
 
+    @Override
     @Transactional
-    public List<Comment> findByAppUserUsername(int appUserId) throws DataAccessException {
+    public List<Comment> findByAppUserId(int appUserId) throws DataAccessException {
         final String sql = "select comment_id, workout_id, app_user_id, parent_comment_id, comment, date " +
                 "from comment " +
                 "where app_user_id = ? " +
@@ -52,6 +55,7 @@ public class CommentJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new CommentMapper(), appUserId);
     }
 
+    @Override
     @Transactional
     public List<Comment> findByAppUserUsername(String appUserUsername) throws DataAccessException {
         final String sql = "select comment_id, workout_id, c.app_user_id, parent_comment_id, comment, date " +
@@ -63,6 +67,7 @@ public class CommentJdbcTemplateRepository {
         return jdbcTemplate.query(sql, new CommentMapper(), appUserUsername);
     }
 
+    @Override
     @Transactional
     public Comment addComment(Comment comment) throws DataAccessException {
         final String sql = "insert into comment (workout_id, app_user_id, parent_comment_id, comment, date) " +
@@ -89,6 +94,7 @@ public class CommentJdbcTemplateRepository {
         return comment;
     }
 
+    @Override
     @Transactional
     public boolean updateComment(Comment comment) throws DataAccessException {
         final String sql = "update comment set " +
@@ -108,6 +114,7 @@ public class CommentJdbcTemplateRepository {
         return rowsUpdated > 0;
     }
 
+    @Override
     @Transactional
     public boolean deleteComment(int commentId) throws DataAccessException {
         final String sql = "delete from comment " +
