@@ -74,12 +74,14 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
     @Transactional
     public boolean updateTrainingPlan(TrainingPlan trainingPlan) throws DataAccessException {
         final String sql = "update training_plan set " +
+                "app_user_id = ?, " +
                 "`name` = ?, " +
                 "start_date = ?, " +
                 "end_date = ?, " +
                 "`description` = ?;";
 
         int rowsUpdated = jdbcTemplate.update(sql,
+                trainingPlan.getAppUserId(),
                 trainingPlan.getName(),
                 trainingPlan.getStartDate(),
                 trainingPlan.getEndDate(),
