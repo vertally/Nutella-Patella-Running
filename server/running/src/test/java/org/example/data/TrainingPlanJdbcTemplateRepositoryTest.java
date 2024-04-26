@@ -107,7 +107,7 @@ class TrainingPlanJdbcTemplateRepositoryTest {
     }
 
     @Test
-    void shouldNotDeleteWhenTrainingPlanDoesNotExist() throws DataAccessException {
+    void shouldNotDeleteTrainingPlanWhenTrainingPlanDoesNotExist() throws DataAccessException {
         boolean expected = repository.deleteTrainingPlan(2);
 
         assertFalse(expected);
