@@ -93,11 +93,17 @@ public class DistanceJdbcTemplateRepository implements DistanceRepository {
     @Override
     @Transactional
     public boolean deleteDistance(int distanceId) throws DataAccessException {
+        deleteChildren(distanceId);
+
         final String sql = "delete from distance " +
                 "where distance_id = ?;";
 
         int rowsDeleted = jdbcTemplate.update(sql, distanceId);
 
         return rowsDeleted > 0;
+    }
+
+    private void deleteChildren(int distanceId) {
+        jdbcTemplate.update("delete from personal_best where distance_id = ?;", distanceId);
     }
 }
