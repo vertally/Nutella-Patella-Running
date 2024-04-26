@@ -13,19 +13,19 @@ public class Distance {
         this.distance = distance;
     }
 
-    private int getDistanceId() {
+    public int getDistanceId() {
         return distanceId;
     }
 
-    private void setDistanceId(int distanceId) {
+    public void setDistanceId(int distanceId) {
         this.distanceId = distanceId;
     }
 
-    private String getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    private void setDistance(String distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 }
