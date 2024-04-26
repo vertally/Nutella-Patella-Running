@@ -15,7 +15,7 @@ public class WorkoutMapper implements RowMapper<Workout> {
         workout.setAppUserId(rs.getInt("app_user_id"));
         workout.setWorkoutTypeId(rs.getInt("workout_type_id"));
         workout.setDate(rs.getDate("date").toLocalDate());
-        workout.setDistance(rs.getInt("distance"));
+        workout.setDistance(rs.getDouble("distance"));
         workout.setUnit(rs.getString("unit"));
         workout.setDescription(rs.getString("description"));
         workout.setEffort(rs.getString("effort"));

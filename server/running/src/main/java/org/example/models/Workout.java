@@ -9,7 +9,7 @@ public class Workout {
     private int trainingPlanId;
     private int workoutTypeId;
     private LocalDate date;
-    private int distance;
+    private double distance;
     private String unit;
     private String description;
     private String effort;
@@ -17,7 +17,7 @@ public class Workout {
     public Workout() {
     }
 
-    public Workout(int workoutId, int appUserId, int trainingPlanId, int workoutTypeId, LocalDate date, int distance, String unit, String description, String effort) {
+    public Workout(int workoutId, int appUserId, int trainingPlanId, int workoutTypeId, LocalDate date, double distance, String unit, String description, String effort) {
         this.workoutId = workoutId;
         this.appUserId = appUserId;
         this.trainingPlanId = trainingPlanId;
@@ -69,11 +69,11 @@ public class Workout {
         this.date = date;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 

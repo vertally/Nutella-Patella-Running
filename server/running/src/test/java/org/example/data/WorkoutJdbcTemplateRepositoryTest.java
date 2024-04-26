@@ -150,7 +150,7 @@ class WorkoutJdbcTemplateRepositoryTest {
         expected.setAppUserId(1);
         expected.setWorkoutTypeId(4);
         expected.setDate(LocalDate.of(2024, 7, 2));
-        expected.setDistance(4);
+        expected.setDistance(4.5);
         expected.setUnit("miles");
         expected.setDescription("1 mile warm-up followed by 3 miles in Zone 4 (approximately 90-100% of FTHR).");
         expected.setEffort("Zone 4");

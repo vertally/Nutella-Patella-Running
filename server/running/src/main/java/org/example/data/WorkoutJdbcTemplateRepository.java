@@ -114,7 +114,7 @@ public class WorkoutJdbcTemplateRepository implements WorkoutRepository {
             ps.setInt(1, workout.getAppUserId());
             ps.setInt(2, workout.getWorkoutTypeId());
             ps.setDate(3, Date.valueOf(workout.getDate()));
-            ps.setInt(4, workout.getDistance());
+            ps.setDouble(4, workout.getDistance());
             ps.setString(5, workout.getUnit());
             ps.setString(6, workout.getDescription());
             ps.setString(7, workout.getEffort());
