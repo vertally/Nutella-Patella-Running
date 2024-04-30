@@ -103,6 +103,6 @@ create table personal_best (
     constraint fk_personal_best_distance_id
 		foreign key (distance_id)
         references distance(distance_id),
-	`time` varchar(50) not null,
+	`time` time not null,
     `date` date not null
 );
