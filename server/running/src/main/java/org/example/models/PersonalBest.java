@@ -1,5 +1,6 @@
 package org.example.models;
 
+import java.sql.Time;
 import java.time.LocalDate;
 
 public class PersonalBest {
@@ -7,13 +8,13 @@ public class PersonalBest {
     private int personalBestId;
     private int appUserId;
     private int distanceId;
-    private String time;
+    private Time time;
     private LocalDate date;
 
     public PersonalBest() {
     }
 
-    public PersonalBest(int personalBestId, int appUserId, int distanceId, String time, LocalDate date) {
+    public PersonalBest(int personalBestId, int appUserId, int distanceId, Time time, LocalDate date) {
         this.personalBestId = personalBestId;
         this.appUserId = appUserId;
         this.distanceId = distanceId;
@@ -45,11 +46,11 @@ public class PersonalBest {
         this.distanceId = distanceId;
     }
 
-    public String getTime() {
+    public Time getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Time time) {
         this.time = time;
     }
 
