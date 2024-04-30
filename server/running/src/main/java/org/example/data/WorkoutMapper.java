@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class WorkoutMapper implements RowMapper<Workout> {
 
     @Override
-    public Workout mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public Workout mapRow(ResultSet rs, int i) throws SQLException {
         Workout workout = new Workout();
         workout.setWorkoutId(rs.getInt("workout_id"));
         workout.setAppUserId(rs.getInt("app_user_id"));
