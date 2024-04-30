@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
@@ -39,9 +40,9 @@ class AppUserServiceTest {
         when(repository.findAppUserByUsername("NutellaPatella")).thenReturn(expected);
         when(repository.findAppUserByUsername("CoachNutellaPatella")).thenReturn(null);
 
-        UserDetails actual = service.loadUserByUsername("CoachNutellaPatella");
-
-        assertNull(actual);
+        assertThrows(UsernameNotFoundException.class,
+                () -> service.loadUserByUsername("CoachNutellaPatella"),
+                "CoachNutellaPatella could not be found.");
     }
 
     // HELPER METHODS

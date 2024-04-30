@@ -22,7 +22,7 @@ public class AppUserService implements UserDetailsService {
         this.repository = repository;
         this.encoder = encoder;
     }
-
+    
     @Override
     public UserDetails loadUserByUsername(String appUserUsername) throws UsernameNotFoundException {
         AppUser appUser = repository.findAppUserByUsername(appUserUsername);
@@ -34,7 +34,7 @@ public class AppUserService implements UserDetailsService {
         return appUser;
     }
 
-    public Result<AppUser> addAppUser(String email, String username, String password) {
+    public Result<AppUser> addAppUser(String email, String username, String password) throws DataAccessException {
         Result<AppUser> result = new Result<>();
 
         password = encoder.encode(password);
