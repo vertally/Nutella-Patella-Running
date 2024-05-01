@@ -39,16 +39,16 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
 
     @Override
     @Transactional
-    public AppUser addAppUser(AppUser user) throws DataAccessException {
+    public AppUser addAppUser(AppUser appUser) throws DataAccessException {
         final String sql = "insert into app_user (email, username, password_hash) " +
                 "values (?, ?, ?);";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getUsername());
-            ps.setString(3, user.getPassword());
+            ps.setString(1, appUser.getEmail());
+            ps.setString(2, appUser.getUsername());
+            ps.setString(3, appUser.getPassword());
             return ps;
         }, keyHolder);
 
@@ -56,11 +56,11 @@ public class AppUserJdbcTemplateRepository implements AppUserRepository {
             return null;
         }
 
-        user.setAppUserId(keyHolder.getKey().intValue());
+        appUser.setAppUserId(keyHolder.getKey().intValue());
 
-        updateRoles(user);
+        updateRoles(appUser);
 
-        return user;
+        return appUser;
     }
 
     @Override

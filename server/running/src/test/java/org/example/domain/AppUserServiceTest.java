@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +44,24 @@ class AppUserServiceTest {
         assertThrows(UsernameNotFoundException.class,
                 () -> service.loadUserByUsername("CoachNutellaPatella"),
                 "CoachNutellaPatella could not be found.");
+    }
+
+    @Test
+    void shouldAddAppUser() throws DataAccessException {
+        AppUser expected = new AppUser();
+        expected.setEmail("nutellapatella@gmail.com");
+        expected.setUsername("NutellaPatella");
+        expected.setPassword("jellylegs2024");
+
+        List<AppUser> allAppUsers = new ArrayList<>();
+        allAppUsers.add(expected);
+
+        when(repository.addAppUser(expected)).thenReturn(expected);
+
+        Result<AppUser> actual = service.addAppUser(expected);
+
+        assertTrue(actual.isSuccess());
+        assertNotNull(actual.getPayload());
     }
 
     // HELPER METHODS

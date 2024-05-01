@@ -16,7 +16,11 @@ public class AppUser implements UserDetails {
     private String username;
     private String password;
     private boolean enabled;
-    private final Collection<GrantedAuthority> authorities;
+    private Collection<GrantedAuthority> authorities;
+
+    public AppUser(){
+
+    }
 
     public AppUser(int appUserId, String email, String username, String password, boolean enabled, List<String> roles) {
         this.appUserId = appUserId;

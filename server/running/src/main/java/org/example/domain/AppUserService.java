@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,8 +23,9 @@ public class AppUserService implements UserDetailsService {
         this.repository = repository;
         this.encoder = encoder;
     }
-    
+
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String appUserUsername) throws UsernameNotFoundException {
         AppUser appUser = repository.findAppUserByUsername(appUserUsername);
 
@@ -34,16 +36,16 @@ public class AppUserService implements UserDetailsService {
         return appUser;
     }
 
-    public Result<AppUser> addAppUser(String email, String username, String password) throws DataAccessException {
+    @Transactional
+    public Result<AppUser> addAppUser(AppUser appUser) throws DataAccessException {
         Result<AppUser> result = new Result<>();
 
-        password = encoder.encode(password);
-        AppUser appUser = new AppUser(0, email, username, password, true, List.of("runner"));
-
-        validateAdd(email, username, password);
+        validateAdd(appUser, result);
         if (!result.isSuccess()) {
             return result;
         }
+
+        setEncodedPassword(appUser);
 
         validateAppUserId(appUser, result);
         if (!result.isSuccess()) {
@@ -55,6 +57,7 @@ public class AppUserService implements UserDetailsService {
         return result;
     }
 
+    @Transactional
     public Result<AppUser> deleteAppUser(int appUserId) throws DataAccessException {
         Result<AppUser> result = new Result<>();
 
@@ -66,38 +69,36 @@ public class AppUserService implements UserDetailsService {
         return result;
     }
 
-    private Result<AppUser> validateAdd(String email, String username, String password) {
-        Result<AppUser> result = new Result<>();
-
+    private Result<AppUser> validateAdd(AppUser appUser, Result<AppUser> result) {
         // EMAIL VALIDATION
-        validateEmailNulls(email, result);
+        validateEmailNulls(appUser.getEmail(), result);
         if (!result.isSuccess()) {
             return result;
         }
 
         // USERNAME VALIDATION
-        validateUsernameNulls(username, result);
+        validateUsernameNulls(appUser.getUsername(), result);
         if (!result.isSuccess()) {
             return result;
         }
 
-        validateDuplicateUsername(username, result);
+        validateDuplicateUsername(appUser.getUsername(), result);
         if (!result.isSuccess()) {
             return result;
         }
 
-        validateUsernameFieldLength(username, result);
+        validateUsernameFieldLength(appUser.getUsername(), result);
         if (!result.isSuccess()) {
             return result;
         }
 
         // PASSWORD VALIDATION
-        validatePasswordNulls(password, result);
+        validatePasswordNulls(appUser.getPassword(), result);
         if (!result.isSuccess()) {
             return result;
         }
 
-        validatePasswordFieldLength(password, result);
+        validatePasswordFieldLength(appUser.getPassword(), result);
         if (!result.isSuccess()) {
             return result;
         }
@@ -128,7 +129,9 @@ public class AppUserService implements UserDetailsService {
     private Result<AppUser> validateDuplicateUsername(String username, Result<AppUser> result) {
         AppUser existingAppUser = repository.findAppUserByUsername(username);
 
-        if (username.equals(existingAppUser.getUsername())) {
+        if (existingAppUser == null) {
+            return result;
+        } else {
             result.addMessage(ActionStatus.DUPLICATE, "This username is taken.");
         }
 
@@ -162,11 +165,17 @@ public class AppUserService implements UserDetailsService {
         return result;
     }
 
+    // SET ENCODED PASSWORD
+    private void setEncodedPassword(AppUser appUser) {
+        String password = appUser.getPassword();
+        password = encoder.encode(password);
+        appUser.setPassword(password);
+    }
+
     // APPUSERID VALIDATION
     private Result<AppUser> validateAppUserId(AppUser appUser, Result<AppUser> result) {
         if (appUser.getAppUserId() != 0) {
             result.addMessage(ActionStatus.INVALID, "You cannot set this user's ID.");
-            return result;
         }
 
         return result;

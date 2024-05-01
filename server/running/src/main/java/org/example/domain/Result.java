@@ -33,6 +33,6 @@ public class Result<T> {
     }
 
     public boolean isSuccess() {
-        return messages.size() == 0;
+        return messages.isEmpty();
     }
 }
