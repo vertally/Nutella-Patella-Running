@@ -131,8 +131,9 @@ public class AppUserService implements UserDetailsService {
 
         if (existingAppUser == null) {
             return result;
-        } else {
+        } else if (existingAppUser.getUsername().equals(username)) {
             result.addMessage(ActionStatus.DUPLICATE, "This username is taken.");
+            return result;
         }
 
         return result;
