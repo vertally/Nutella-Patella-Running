@@ -10,8 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class AppUserService implements UserDetailsService {
 
@@ -173,10 +171,11 @@ public class AppUserService implements UserDetailsService {
         appUser.setPassword(password);
     }
 
-    // APPUSERID VALIDATION
+    // APP USER ID VALIDATION
     private Result<AppUser> validateAppUserId(AppUser appUser, Result<AppUser> result) {
         if (appUser.getAppUserId() != 0) {
             result.addMessage(ActionStatus.INVALID, "You cannot set this user's ID.");
+            return result;
         }
 
         return result;
