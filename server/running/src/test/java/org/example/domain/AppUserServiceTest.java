@@ -147,6 +147,26 @@ class AppUserServiceTest {
         assertEquals("Password must contain at least 8 characters.",actual.getMessages().get(0));
     }
 
+    @Test
+    void shouldDelete() throws DataAccessException {
+        AppUser appUser = makeAppUser(1);
+        when(repository.deleteAppUser(1)).thenReturn(true);
+
+        Result<AppUser> result = service.deleteAppUser(1);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    void shouldNotDeleteWhenAppUserIdDoesNotExist() throws DataAccessException {
+        when(repository.deleteAppUser(1)).thenReturn(false);
+
+        Result<AppUser> result = service.deleteAppUser(1);
+
+        assertFalse(result.isSuccess());
+        assertEquals("This user cannot be found.", result.getMessages().get(0));
+    }
+
     // HELPER METHODS
     private AppUser makeAppUser(int appUserId) {
         AppUser appUser = new AppUser(
