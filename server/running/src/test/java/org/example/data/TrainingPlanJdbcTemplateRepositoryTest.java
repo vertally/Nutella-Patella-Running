@@ -33,6 +33,15 @@ class TrainingPlanJdbcTemplateRepositoryTest {
     }
 
     @Test
+    void shouldFindAllTrainingPlan() throws DataAccessException {
+        List<TrainingPlan> result = repository.findAllTrainingPlan();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("2024 NYC Marathon", result.get(0).getName());
+    }
+
+    @Test
     void shouldFindByTrainingPlanId() throws DataAccessException {
         TrainingPlan result = repository.findTrainingPlanByTrainingPlanId(1);
 
@@ -59,6 +68,22 @@ class TrainingPlanJdbcTemplateRepositoryTest {
     @Test
     void shouldNotFindByAppUserIdWhenAppUserDoesNotHaveAnyTrainingPlans() throws DataAccessException {
         List<TrainingPlan> result = repository.findTrainingPlanByAppUserId(2);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void shouldFindByAppUserUsername() throws DataAccessException {
+        List<TrainingPlan> result = repository.findTrainingPlanByAppUserUsername("NutellaPatella");
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("2024 NYC Marathon", result.get(0).getName());
+    }
+
+    @Test
+    void shouldNotFindByAppUserUsernameWhenAppUserUsernameDoesNotExist() throws DataAccessException {
+        List<TrainingPlan> result = repository.findTrainingPlanByAppUserUsername("CoachNutellaPatella");
 
         assertEquals(0, result.size());
     }

@@ -22,6 +22,16 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
 
     @Override
     @Transactional
+    public List<TrainingPlan> findAllTrainingPlan() throws DataAccessException {
+        final String sql = "select training_plan_id, app_user_id, name, start_date, end_date, description " +
+                "from training_plan " +
+                "order by start_date, name;";
+
+        return jdbcTemplate.query(sql, new TrainingPlanMapper());
+    }
+
+    @Override
+    @Transactional
     public TrainingPlan findTrainingPlanByTrainingPlanId(int trainingPlanId) throws DataAccessException {
         final String sql = "select training_plan_id, app_user_id, name, start_date, end_date, description " +
                 "from training_plan " +
@@ -38,9 +48,22 @@ public class TrainingPlanJdbcTemplateRepository implements TrainingPlanRepositor
     public List<TrainingPlan> findTrainingPlanByAppUserId(int appUserId) throws DataAccessException {
         final String sql = "select training_plan_id, app_user_id, name, start_date, end_date, description " +
                 "from training_plan " +
-                "where app_user_id = ?;";
+                "where app_user_id = ? " +
+                "order by start_date;";
 
         return jdbcTemplate.query(sql, new TrainingPlanMapper(), appUserId);
+    }
+
+    @Override
+    @Transactional
+    public List<TrainingPlan> findTrainingPlanByAppUserUsername(String appUserUsername) throws DataAccessException {
+        final String sql = "select training_plan_id, tp.app_user_id, name, start_date, end_date, description " +
+                "from training_plan tp " +
+                "inner join app_user au on au.app_user_id = tp.app_user_id " +
+                "where username = ? " +
+                "order by start_date;";
+
+        return jdbcTemplate.query(sql, new TrainingPlanMapper(), appUserUsername);
     }
 
     @Override
