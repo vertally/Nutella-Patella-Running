@@ -118,13 +118,14 @@ public class TrainingPlanService {
             return result;
         }
 
-        validateStartDateIsBeforeEndDate(trainingPlan.getStartDate(), trainingPlan.getEndDate(), result);
+        // END DATE VALIDATION
+        validateEndDateNull(trainingPlan.getEndDate(), result);
         if (!result.isSuccess()) {
             return result;
         }
 
-        // END DATE VALIDATION
-        validateEndDateNull(trainingPlan.getEndDate(), result);
+        // DATE CHRONOLOGY VALIDATION
+        validateStartDateIsBeforeEndDate(trainingPlan.getStartDate(), trainingPlan.getEndDate(), result);
         if (!result.isSuccess()) {
             return result;
         }
@@ -191,19 +192,19 @@ public class TrainingPlanService {
         return result;
     }
 
-    private Result<TrainingPlan> validateStartDateIsBeforeEndDate(LocalDate startDate, LocalDate endDate, Result<TrainingPlan> result) {
-        if (endDate.isBefore(startDate)) {
-            result.addMessage(ActionStatus.INVALID, "A training plan's start date cannot be after its end date.");
+    // END DATE VALIDATION
+    private Result<TrainingPlan> validateEndDateNull(LocalDate endDate, Result<TrainingPlan> result) {
+        if (endDate == null) {
+            result.addMessage(ActionStatus.INVALID, "An end date is required.");
             return result;
         }
 
         return result;
     }
 
-    // END DATE VALIDATION
-    private Result<TrainingPlan> validateEndDateNull(LocalDate endDate, Result<TrainingPlan> result) {
-        if (endDate == null) {
-            result.addMessage(ActionStatus.INVALID, "An end date is required.");
+    private Result<TrainingPlan> validateStartDateIsBeforeEndDate(LocalDate startDate, LocalDate endDate, Result<TrainingPlan> result) {
+        if (endDate.isBefore(startDate)) {
+            result.addMessage(ActionStatus.INVALID, "A training plan's start date cannot be after its end date.");
             return result;
         }
 

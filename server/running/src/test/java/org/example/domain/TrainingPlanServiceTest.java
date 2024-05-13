@@ -191,6 +191,112 @@ class TrainingPlanServiceTest {
         assertEquals("You've already created a training plan with this name.", actual.getMessages().get(0));
     }
 
+    @Test
+    void shouldNotAddWhenStartDateIsNull() throws DataAccessException {
+        TrainingPlan expected = new TrainingPlan();
+        expected.setAppUserId(1);
+        expected.setName("2024 NYC Marathon");
+        expected.setEndDate(LocalDate.of(2024, 11, 3));
+        expected.setDescription("A 16-week training plan for the New York City Marathon on November 3, 2024.");
+        when(repository.addTrainingPlan(expected)).thenReturn(expected);
+
+        Result<TrainingPlan> actual = service.addTrainingPlan(expected);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("A start date is required.", actual.getMessages().get(0));
+    }
+
+    @Test
+    void shouldNotAddWhenEndDateIsNull() throws DataAccessException {
+        TrainingPlan expected = new TrainingPlan();
+        expected.setAppUserId(1);
+        expected.setName("2024 NYC Marathon");
+        expected.setStartDate(LocalDate.of(2024, 7, 1));
+        expected.setDescription("A 16-week training plan for the New York City Marathon on November 3, 2024.");
+        when(repository.addTrainingPlan(expected)).thenReturn(expected);
+
+        Result<TrainingPlan> actual = service.addTrainingPlan(expected);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("An end date is required.", actual.getMessages().get(0));
+    }
+
+    @Test
+    void shouldNotAddWhenEndDateIsBeforeStartDate() throws DataAccessException {
+        TrainingPlan expected = new TrainingPlan();
+        expected.setAppUserId(1);
+        expected.setName("2024 NYC Marathon");
+        expected.setStartDate(LocalDate.of(2024, 11, 3));
+        expected.setEndDate(LocalDate.of(2024, 7, 1));
+        expected.setDescription("A 16-week training plan for the New York City Marathon on November 3, 2024.");
+        when(repository.addTrainingPlan(expected)).thenReturn(expected);
+
+        Result<TrainingPlan> actual = service.addTrainingPlan(expected);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("A training plan's start date cannot be after its end date.", actual.getMessages().get(0));
+    }
+
+    @Test
+    void shouldNotAddWhenDescriptionIsTooLong() throws DataAccessException {
+        TrainingPlan expected = new TrainingPlan();
+        expected.setAppUserId(1);
+        expected.setName("2024 NYC Marathon");
+        expected.setStartDate(LocalDate.of(2024, 7, 1));
+        expected.setEndDate(LocalDate.of(2024, 11, 3));
+        expected.setDescription("A 16-week training plan for the New York City Marathon on November 3, 2024. A 16-week training plan for the New York City Marathon on November 3, 2024. A 16-week training plan for the New York City Marathon on November 3, 2024. A 16-week training plan for the New York City Marathon on November 3, 2024.");
+        when(repository.addTrainingPlan(expected)).thenReturn(expected);
+
+        Result<TrainingPlan> actual = service.addTrainingPlan(expected);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("A training plan description cannot be greater than 240 characters.", actual.getMessages().get(0));
+    }
+
+    @Test
+    void shouldUpdateTrainingPlan() throws DataAccessException {
+        TrainingPlan expected = makeTrainingPlan(1);
+        expected.setName("2025 NYC Marathon");
+        when(repository.updateTrainingPlan(expected)).thenReturn(true);
+
+        Result<TrainingPlan> actual = service.updateTrainingPlan(expected);
+
+        assertTrue(actual.isSuccess());
+        assertEquals("2025 NYC Marathon", expected.getName());
+    }
+
+    @Test
+    void shouldDeleteTrainingPlan() throws DataAccessException {
+        TrainingPlan expected = makeTrainingPlan(1);
+        ArrayList<TrainingPlan> allTrainingPlan = new ArrayList<>();
+        allTrainingPlan.add(expected);
+        when(repository.deleteTrainingPlan(expected.getTrainingPlanId())).thenReturn(true);
+
+        Result<TrainingPlan> actual = service.deleteTrainingPlan(1);
+
+        assertTrue(actual.isSuccess());
+    }
+
+    @Test
+    void shouldNotDeleteWhenTrainingPlanIdDoesNotExist() throws DataAccessException {
+        Result<TrainingPlan> actual = service.deleteTrainingPlan(1);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("This training plan cannot be found.", actual.getMessages().get(0));
+    }
+
+    @Test
+    void shouldNotUpdateWhenTrainingPlanIdIsNotSet() throws DataAccessException {
+        TrainingPlan expected = makeTrainingPlan(1);
+        expected.setTrainingPlanId(0);
+        when(repository.updateTrainingPlan(expected)).thenReturn(true);
+
+        Result<TrainingPlan> actual = service.updateTrainingPlan(expected);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("A training plan ID is required.", actual.getMessages().get(0));
+    }
+
     // HELPER METHODS
     private TrainingPlan makeTrainingPlan(int trainingPlanId) {
         TrainingPlan trainingPlan = new TrainingPlan(
