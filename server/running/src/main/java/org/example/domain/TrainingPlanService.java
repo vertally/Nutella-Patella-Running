@@ -19,6 +19,11 @@ public class TrainingPlanService {
     }
 
     @Transactional
+    public List<TrainingPlan> findAllTrainingPlan() throws DataAccessException {
+        return repository.findAllTrainingPlan();
+    }
+
+    @Transactional
     public TrainingPlan findTrainingPlanByTrainingPlanId(int trainingPlanId) throws DataAccessException {
         return repository.findTrainingPlanByTrainingPlanId(trainingPlanId);
     }
@@ -29,7 +34,12 @@ public class TrainingPlanService {
     }
 
     @Transactional
-    public Result<TrainingPlan> add(TrainingPlan trainingPlan) throws DataAccessException {
+    public List<TrainingPlan> findTrainingPlanByAppUserUsername(String appUserUsername) throws DataAccessException {
+        return repository.findTrainingPlanByAppUserUsername(appUserUsername);
+    }
+
+    @Transactional
+    public Result<TrainingPlan> addTrainingPlan(TrainingPlan trainingPlan) throws DataAccessException {
         Result<TrainingPlan> result = new Result<>();
 
         validate(trainingPlan, result);
@@ -48,7 +58,7 @@ public class TrainingPlanService {
     }
 
     @Transactional
-    public Result<TrainingPlan> update(TrainingPlan trainingPlan) throws DataAccessException {
+    public Result<TrainingPlan> updateTrainingPlan(TrainingPlan trainingPlan) throws DataAccessException {
         Result<TrainingPlan> result = new Result<>();
 
         validate(trainingPlan, result);
