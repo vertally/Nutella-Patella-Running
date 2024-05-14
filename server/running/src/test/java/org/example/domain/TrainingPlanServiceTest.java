@@ -262,7 +262,19 @@ class TrainingPlanServiceTest {
         Result<TrainingPlan> actual = service.updateTrainingPlan(expected);
 
         assertTrue(actual.isSuccess());
-        assertEquals("2025 NYC Marathon", expected.getName());
+        assertEquals("2025 NYC Marathon", actual.getPayload().getName());
+    }
+
+    @Test
+    void shouldNotUpdateWhenTrainingPlanIdIsNotSet() throws DataAccessException {
+        TrainingPlan expected = makeTrainingPlan(1);
+        expected.setTrainingPlanId(0);
+        when(repository.updateTrainingPlan(expected)).thenReturn(true);
+
+        Result<TrainingPlan> actual = service.updateTrainingPlan(expected);
+
+        assertFalse(actual.isSuccess());
+        assertEquals("A training plan ID is required.", actual.getMessages().get(0));
     }
 
     @Test
@@ -283,18 +295,6 @@ class TrainingPlanServiceTest {
 
         assertFalse(actual.isSuccess());
         assertEquals("This training plan cannot be found.", actual.getMessages().get(0));
-    }
-
-    @Test
-    void shouldNotUpdateWhenTrainingPlanIdIsNotSet() throws DataAccessException {
-        TrainingPlan expected = makeTrainingPlan(1);
-        expected.setTrainingPlanId(0);
-        when(repository.updateTrainingPlan(expected)).thenReturn(true);
-
-        Result<TrainingPlan> actual = service.updateTrainingPlan(expected);
-
-        assertFalse(actual.isSuccess());
-        assertEquals("A training plan ID is required.", actual.getMessages().get(0));
     }
 
     // HELPER METHODS
