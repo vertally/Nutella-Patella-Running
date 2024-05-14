@@ -58,8 +58,8 @@ create table workout (
 		foreign key (workout_type_id)
 		references workout_type(workout_type_id),
 	`date` date not null,
-	distance double not null,
-	unit varchar(50) not null,
+	distance double,
+	unit varchar(50),
 	`description` varchar(240),
 	effort varchar(240),
 	training_plan_id int not null,
